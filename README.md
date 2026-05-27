@@ -14,7 +14,7 @@ A high-performance, real-time media streaming system built from scratch using **
 
 ## 🛠️ Architecture Overview
 
-```mermaid
+
 sequenceDiagram
     participant Client as Client (Broadcaster)
     participant Server as Signaling Server (Node.js)
@@ -33,7 +33,7 @@ sequenceDiagram
     Client<->>Host: Exchange ICE Candidates (WebSocket Relay)
     Note over Client,Host: WebRTC Connection Established (SRTP)
     Client-->>Host: Stream audio, webcam video, & screen video
-```
+
 
 ### ⏱️ Timestamp Overlay Logic
 
