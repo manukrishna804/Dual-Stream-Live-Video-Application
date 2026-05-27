@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Broadcaster | Obraz Stream</title>
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="glass-bg-glow"></div>
+  
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <i class="fa-solid fa-satellite-dish pulse-icon"></i>
+        <h1>OBRAZ<span>STREAM</span></h1>
+      </div>
+      <div class="status-panel">
+        <span id="connection-status" class="badge badge-disconnected">
+          <span class="pulse-dot"></span> Disconnected
+        </span>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <!-- Controls Panel -->
+      <section class="panel controls-panel">
+        <h2><i class="fa-solid fa-sliders"></i> Control Center</h2>
+        
+        <div class="control-group">
+          <label for="client-name">Broadcaster Name</label>
+          <div class="input-container">
+            <i class="fa-solid fa-user-astronaut"></i>
+            <input type="text" id="client-name" placeholder="Enter your name..." value="">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-capture" class="btn btn-primary">
+            <i class="fa-solid fa-camera"></i> Initialize Media
+          </button>
+          
+          <button id="btn-stream" class="btn btn-success" disabled>
+            <i class="fa-solid fa-broadcast-tower"></i> Go Live
+          </button>
+          
+          <button id="btn-stop" class="btn btn-danger" disabled>
+            <i class="fa-solid fa-stop"></i> Stop Stream
+          </button>
+        </div>
+
+        <div class="info-card">
+          <h3><i class="fa-solid fa-circle-info"></i> Streaming Protocol Info</h3>
+          <p>This broadcaster captures your webcam and screen share streams simultaneously, draws a live-ticking frame-accurate timestamp, and transmits them directly to the Host Dashboard using low-latency WebRTC technology.</p>
+        </div>
+
+        <!-- Connection Statistics -->
+        <div class="stats-panel-inner">
+          <h3><i class="fa-solid fa-chart-simple"></i> Live Metrics</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">Webcam Stream</span>
+              <span id="stat-webcam" class="stat-val val-inactive">Inactive</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Screen Stream</span>
+              <span id="stat-screen" class="stat-val val-inactive">Inactive</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">WebRTC Latency</span>
+              <span id="stat-latency" class="stat-val">-- ms</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Signaling Link</span>
+              <span id="stat-signaling" class="stat-val val-inactive">Closed</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Video Feed Previews -->
+      <section class="panel feeds-panel">
+        <div class="feeds-header">
+          <h2><i class="fa-solid fa-video"></i> Local Canvas Feeds (Watermarked)</h2>
+          <span class="badge badge-secondary">30 FPS Render</span>
+        </div>
+
+        <div class="video-grid">
+          <!-- Webcam Card -->
+          <div class="video-card">
+            <div class="video-card-header">
+              <span><i class="fa-solid fa-user"></i> WEBCAM FEED</span>
+              <span id="webcam-res" class="video-res-badge">0x0</span>
+            </div>
+            <div class="video-container">
+              <!-- Canvas holds the rendered frame with timestamp -->
+              <canvas id="webcam-canvas" width="640" height="480"></canvas>
+              <!-- Hidden video element for raw webcam capture -->
+              <video id="raw-webcam" autoplay playsinline muted></video>
+              <div class="placeholder-overlay" id="webcam-placeholder">
+                <i class="fa-solid fa-video-slash"></i>
+                <p>Webcam stream not initialized</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen Share Card -->
+          <div class="video-card">
+            <div class="video-card-header">
+              <span><i class="fa-solid fa-desktop"></i> SCREEN SHARE FEED</span>
+              <span id="screen-res" class="video-res-badge">0x0</span>
+            </div>
+            <div class="video-container">
+              <!-- Canvas holds the rendered frame with timestamp -->
+              <canvas id="screen-canvas" width="1280" height="720"></canvas>
+              <!-- Hidden video element for raw screen capture -->
+              <video id="raw-screen" autoplay playsinline muted></video>
+              <div class="placeholder-overlay" id="screen-placeholder">
+                <i class="fa-solid fa-desktop"></i>
+                <p>Screen share stream not initialized</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/client.js"></script>
+</body>
+</html>
