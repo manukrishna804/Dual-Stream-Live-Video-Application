@@ -2,6 +2,18 @@
 
 This document describes the engineering process used to design, build, and stabilize **Obraz Streamer**: a real-time dual-feed (webcam + screen) broadcasting system with a centralized host monitoring dashboard.
 
+## Document Set
+
+This project includes separate engineering documents (required deliverables):
+
+| Document | Contents |
+|----------|----------|
+| **[ARCHITECTURE_CHOICE.md](./ARCHITECTURE_CHOICE.md)** | Why WebRTC, WebSocket signaling, canvas watermarking, and the single-process Node backend were chosen |
+| **[CHALLENGES_FACED.md](./CHALLENGES_FACED.md)** | Specific technical hurdles (ICE timing, track ID mismatch, permissions, port conflicts, etc.) |
+| **[SOLUTIONS.md](./SOLUTIONS.md)** | Engineering logic and implementations used to resolve each challenge |
+
+This file (**METHODOLOGY.md**) provides the overall process, phases, and testing strategy. For deep dives, use the documents above.
+
 ---
 
 ## 1. Project Goals & Constraints
@@ -95,6 +107,10 @@ flowchart LR
 
 ## 3. Architecture Decisions
 
+See **[ARCHITECTURE_CHOICE.md](./ARCHITECTURE_CHOICE.md)** for the full rationale (streaming protocols, tech stack, backend shape, trade-offs).
+
+Summary:
+
 | Decision | Alternatives considered | Why we chose this |
 |----------|-------------------------|-------------------|
 | **WebRTC P2P** | HLS/WebSocket video relay, mediasoup/Janus SFU | Lowest latency; no server-side transcoding; fits 2-party-per-client topology |
@@ -121,6 +137,11 @@ Media never passes through Node.js — only SDP and ICE JSON do.
 ---
 
 ## 5. Challenges & Resolutions
+
+Full detail:
+
+- **[CHALLENGES_FACED.md](./CHALLENGES_FACED.md)** — all hurdles with symptoms and root causes
+- **[SOLUTIONS.md](./SOLUTIONS.md)** — challenge → solution → implementation → outcome
 
 ### 5.1 WebRTC handshake timing (ICE before remote description)
 
@@ -211,11 +232,14 @@ No automated E2E WebRTC tests in CI (browser permissions and real devices make t
 
 ```
 obraz/
-├── server.js           # Express + WebSocket signaling
-├── test_ws.js          # Signaling smoke test
+├── server.js              # Express + WebSocket signaling
+├── test_ws.js             # Signaling smoke test
 ├── package.json
-├── README.md           # User-facing setup & usage
-├── METHODOLOGY.md      # This document
+├── README.md              # User-facing setup & usage
+├── METHODOLOGY.md         # This document (process overview)
+├── ARCHITECTURE_CHOICE.md # Protocol & stack rationale
+├── CHALLENGES_FACED.md    # Technical hurdles
+├── SOLUTIONS.md           # Engineering solutions
 └── public/
     ├── index.html      # Client broadcaster UI
     ├── host.html       # Host dashboard UI
@@ -244,4 +268,4 @@ obraz/
 
 Obraz Streamer was built by **separating concerns**: a thin Node signaling layer, fat browser logic for capture and WebRTC, and a host UI that assembles many peer connections dynamically. The hardest problems were not HTTP or WebSocket wiring but **WebRTC lifecycle ordering** and **cross-peer track identity**. Addressing those with ICE queuing and stream-ID metadata made the system reliable enough for multi-tab demo and LAN monitoring scenarios.
 
-For operational details, see [README.md](./README.md). For backend message types and relay behavior, see `server.js` and the signaling sections in `public/js/client.js` and `public/js/host.js`.
+For operational details, see [README.md](./README.md). For architecture rationale, challenges, and solutions, see [ARCHITECTURE_CHOICE.md](./ARCHITECTURE_CHOICE.md), [CHALLENGES_FACED.md](./CHALLENGES_FACED.md), and [SOLUTIONS.md](./SOLUTIONS.md).
